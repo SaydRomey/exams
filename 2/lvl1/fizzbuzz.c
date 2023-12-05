@@ -14,11 +14,11 @@ void	ft_putstr(char *str)
 
 void	ft_putnbr(int nbr)
 {
-	char	*digit = "0123456789";
+	char	*digits = "0123456789";
 
 	if (nbr > 9)
 		ft_putnbr(nbr / 10);
-	ft_putchar(digit[nbr % 10]);
+	ft_putchar(digits[nbr % 10]);
 }
 
 /* **************************************************************** */

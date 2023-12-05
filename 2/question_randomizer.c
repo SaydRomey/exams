@@ -66,12 +66,33 @@ char	*lvl2(int i)
 	return (lvl2[i]);
 }
 
+char	*lvl3(int i)
+{
+	char	*lvl3[14];
+
+	lvl3[0] = "add_prime_sum";
+	lvl3[1] = "epur_str";
+	lvl3[2] = "expand_str";
+	lvl3[3] = "ft_atoi_base";
+	lvl3[4] = "ft_list_size";
+	lvl3[5] = "ft_range";
+	lvl3[6] = "ft_rrange";
+	lvl3[7] = "hidenp";
+	lvl3[8] = "lcm";
+	lvl3[9] = "paramsum";
+	lvl3[10] = "pgcd";
+	lvl3[11] = "print_hex";
+	lvl3[12] = "rstr_capitalizer";
+	lvl3[13] = "tab_mult";
+	return (lvl3[i]);
+}
+
 int	main(void)
 {
 	int		lvl;
 	char	*random_question;
 
-	printf("Enter question level (1 or 2): ");
+	printf("Enter question level (1, 2 or 3): ");
 	scanf("%d", &lvl);
 	if (lvl == 1)
 	{
@@ -83,6 +104,12 @@ int	main(void)
 		random_question = lvl2(ft_rand(0, 19));
 		printf("%s\n", random_question);
 	}
+	else if (lvl == 3)
+	{
+		random_question = lvl3(ft_rand(0, 13));
+		printf("%s\n", random_question);
+	}
+	// else if (lvl == 4)
 	else
 		printf("Invalid level\n");
 	return (0);

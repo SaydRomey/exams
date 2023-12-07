@@ -50,7 +50,7 @@ int		ft_isprime(int nbr)
 	check = 2;
 	if (nbr <= 1)
 		return (0);
-	while (check < nbr) //or while (check * check <= nbr)
+	while (check < nbr)
 	{
 		if (nbr % check == 0)
 			return (0);

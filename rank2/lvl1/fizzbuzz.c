@@ -21,8 +21,6 @@ void	ft_putnbr(int nbr)
 	ft_putchar(digits[nbr % 10]);
 }
 
-/* **************************************************************** */
-
 void	ft_fizzbuzz(int nbr)
 {
 	int	i;

@@ -28,9 +28,9 @@ void	ulstr(char *str)
 	while (str[i])
 	{
 		if (ft_islower(str[i]))
-			ft_putchar(str[i] - 32);
+			ft_putchar(str[i] - ' ');
 		else if (ft_isupper(str[i]))
-			ft_putchar(str[i] + 32);
+			ft_putchar(str[i] + ' ');
 		else
 			ft_putchar(str[i]);
 		i++;

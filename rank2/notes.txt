@@ -1,0 +1,82 @@
+
+putnbr
+	char *digits = "0123456789";
+	if (nbr > 9)
+		ft_putnbr(nbr / 10);
+	ft_putchar(digits[nbr % 10]);
+
+(also works as a puthex)
+
+	char *digits = "0123456789abcdef";
+	if (nbr > 15)
+		ft_puthex(nbr / 16);
+	ft_putchar(digits[nbr % 16]);
+//
+
+atoi:
+	skip leading spaces
+	handle sign
+	while (isdigit(str[i]))
+	{
+		digit = str[i] - '0';
+		result = result * 10;
+		result = result + digit;
+		i++;
+	}
+	return (result * sign);
+//
+
+strrev
+i = 0;
+len = strlen(str) - 1;
+while (i < len)
+	swap(&str[i], &str[len]);
+	i++;
+	len--;
+//
+
+pwer of 2:
+	if n == 0
+		return 0;
+	while (n % 2 == 0)
+		n = n / 2;
+	if (n == 1)
+		return (1);
+	return (0);
+//
+
+bits:
+
+(print)
+	bit = 128
+	while (bit > 0)
+	{
+		if (octet >= bit)
+			putchar 1;
+			octet -= bit;
+		else
+			putchar 0;
+		bit /= 2
+	}
+
+(reverse)
+(uchar)	reversed = 0
+		bit_count = 8
+	while (bit_count > 0)
+	{
+		reversed *= 2; //<<= 1 (shift left by 1 bit)
+		reversed += octet % 2; //add last bit of 'octet' to 'reversed'
+		octet /= 2; //>>= 1 (shift right by 1 bit)
+		bit_count--;
+	}
+
+(swap)
+
+high = octet / 16; //>> 4 (shift right by 4 bits)
+low = octet % 16; //get the low 4 bits
+return ((low * 16) + high); //<<4 (shift left by 4 bits)
+//
+
+union
+	int printed[128] = {0}; //use each as a 'printed' flag
+

@@ -13,8 +13,6 @@ int	ft_isspace(char c)
 	return (0);
 }
 
-/* **************************************************************** */
-
 void	put_first_word(char *str)
 {
 	int	i;

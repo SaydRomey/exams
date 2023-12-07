@@ -10,12 +10,12 @@ int	letter_count(char c)
 {
 	int	count;
 
-	count = 1;
+	count = 0;
 	if (c >= 'a' && c <= 'z')
-		count = c - 'a' + 1;
+		count = c - 'a';
 	else if (c >= 'A' && c <= 'Z')
-		count = c - 'A' + 1;
-	return (count);
+		count = c - 'A';
+	return (count + 1);
 }
 
 void	repeat_alpha(char *str)

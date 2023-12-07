@@ -1,6 +1,6 @@
 
 #ifndef size_t
-#define size_t unsigned long
+# define size_t unsigned long
 #endif
 
 size_t	ft_strlen(char *str)

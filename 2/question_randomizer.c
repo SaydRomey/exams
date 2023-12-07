@@ -87,30 +87,40 @@ char	*lvl3(int i)
 	return (lvl3[i]);
 }
 
+char	*lvl4(int i)
+{
+	char	*lvl4[10];
+
+	lvl4[0] = "flood_fill";
+	lvl4[1] = "fprime";
+	lvl4[2] = "ft_itoa";
+	lvl4[3] = "ft_list_foreach";
+	lvl4[4] = "ft_list_remove_if";
+	lvl4[5] = "ft_split";
+	lvl4[6] = "rev_wstring";
+	lvl4[7] = "rostring";
+	lvl4[8] = "sort_int_tab";
+	lvl4[9] = "sort_list";
+	return (lvl4[i]);
+}
+
 int	main(void)
 {
 	int		lvl;
 	char	*random_question;
 
-	printf("Enter question level (1, 2 or 3): ");
+	printf("Enter question level (1, 2, 3 or 4): ");
 	scanf("%d", &lvl);
 	if (lvl == 1)
-	{
 		random_question = lvl1(ft_rand(0, 11));
-		printf("%s\n", random_question);
-	}
 	else if (lvl == 2)
-	{
 		random_question = lvl2(ft_rand(0, 19));
-		printf("%s\n", random_question);
-	}
 	else if (lvl == 3)
-	{
 		random_question = lvl3(ft_rand(0, 13));
-		printf("%s\n", random_question);
-	}
-	// else if (lvl == 4)
+	else if (lvl == 4)
+		random_question = lvl4(ft_rand(0, 9));
 	else
-		printf("Invalid level\n");
+		return (printf("Invalid level\n"), 0);
+	printf("%s\n", random_question);
 	return (0);
 }

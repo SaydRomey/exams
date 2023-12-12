@@ -47,14 +47,13 @@ int	*ft_rrange(int start, int end)
 		{
 			array[i] = end;
 			end--;
-			i++;
 		}
 		else
 		{
 			array[i] = end;
 			end++;
-			i++;
 		}
+		i++;
 	}
 	return (array);
 }

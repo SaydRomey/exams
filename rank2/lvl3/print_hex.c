@@ -52,7 +52,7 @@ void	print_hex(int nbr)
 	digits = "0123456789abcdef";
 	if (nbr >= 16)
 		print_hex(nbr / 16);
-	ft_putchar(digits[nbr % 15]);
+	ft_putchar(digits[nbr % 16]);
 }
 
 int	main(int argc, char **argv)

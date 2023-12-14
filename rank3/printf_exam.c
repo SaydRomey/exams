@@ -15,95 +15,188 @@ x (lowercase hexademical)
 #include <unistd.h> 
 #include <stdlib.h> 
 #include <stdarg.h> 
- 
-void        put_string(char *string, int *length) 
-{ 
-        if (!string) 
-                string = "(null)"; 
-        while (*string) 
-                *length += write(1, string++, 1); 
-} 
-  
-void        put_digit(long long int number, int base, int *length) 
-{ 
-        char        *hexadecimal = "0123456789abcdef"; 
- 
-        if (number < 0) 
-        { 
-                number *= -1; 
-                *length += write(1, "-", 1); 
-        } 
-        if (number >= base) 
-                put_digit((number / base), base, length); 
-        *length += write(1, &hexadecimal[number % base], 1); 
-} 
- 
-int        ft_printf(const char *format, ...) 
-{ 
-        int length = 0; 
-         
-        va_list        pointer; 
-        va_start(pointer, format); 
-         
-        while (*format) 
-        { 
-                if ((*format == '%') && *(format + 1)) 
-                { 
-                        format++; 
-                        if (*format == 's') 
-                                put_string(va_arg(pointer, char *), &length); 
-                        else if (*format == 'd') 
-                                put_digit((long long int)va_arg(pointer, int), 10, &length); 
-                        else if (*format == 'x') 
-                                put_digit((long long int)va_arg(pointer, unsigned int), 16, &length); 
-                } 
-                else 
-                        length += write(1, format, 1); 
-                format++; 
-        } 
-        return (va_end(pointer), length); 
+
+int	ft_strlen(char *str)
+{
+	int i = 0;
+
+	while (str[i])
+		i++;
+	return (i);
 }
 
-// Or shorter
+int	ft_putcharlen(char c)
+{
+	return (write(1, &c, 1));
+}
 
-#include <unistd.h> 
-#include <stdarg.h> 
- 
-size_t        ft_putstr(char *string, int length) 
-{ 
-        while (string && string[length] && ++length); 
-        return (string ? write(1, string, length) : write(1, "(null)", 6)); 
-} 
- 
-void        ft_putnbr(long number, unsigned length, char *sign, int *size) 
-{ 
-        if (number >= length) 
-                ft_putnbr(number / length, length, sign, size); 
-        *size += (int) write(1, &sign[number % length], 1); 
-} 
- 
-void        ft_puthex(long number, int length, char *sign, int *size) 
-{ 
-        (number < 0) ? (*size += (int) write(1, "-", 1), \ 
-                ft_putnbr(-number, length, sign, size)) : (ft_putnbr(number, length, sign, size)); 
-} 
- 
-int        ft_printf(char *format, ...) 
-{ 
-        int                size = 0; 
-        va_list        ap; 
- 
-        va_start(ap, format); 
-        while (*format) 
-        { 
-                if (*format == '%' && *(format + 1) == 's' && (format += 2)) 
-                        size += (int) ft_putstr(va_arg(ap, char *), 0); 
-                else if (*format == '%' && *(format + 1) == 'x' && (format += 2)) 
-                        ft_putnbr(va_arg(ap, int), 16, "0123456789abcdef", &size); 
-                else if (*format == '%' && *(format + 1) == 'd' && (format += 2)) 
-                        ft_puthex(va_arg(ap, int), 10, "0123456789", &size); 
-                else 
-                        size += (int) write(1, format++, 1); 
-        } 
-        return (va_end(ap), size); 
+int	ft_intlen(int nbr)
+{
+	int	len;
+
+	len = 0;
+	if (nbr <= 0)
+		len = 1;
+	while (nbr != 0)
+	{
+		nbr = nbr / 10;
+		len++;
+	}
+	return (len);
+}
+
+/*
+string
+*/
+int	ft_putstrlen(char *str)
+{
+	int	len = 0;
+
+	if (!str)
+	{
+		len = write(1, "(null)", 6);
+		return (len);
+	}
+	len = write(1, str, ft_strlen(str));
+	return (len);
+}
+
+/*
+decimal
+*/
+int	ft_putnbrlen(int nbr)
+{
+	char	*digits = "0123456789";
+	int		len = 0;
+
+	if (nbr == -2147483648)
+		return (ft_putstrlen("-2147483648"));
+	if (nbr < 0)
+	{
+		len += ft_putcharlen('-');
+		nbr = -nbr;
+	}
+	if (nbr > 9)
+		len += ft_putnbrlen(nbr / 10);
+	len += ft_putcharlen(digits[nbr % 10]);
+	// return (ft_intlen(nbr));
+	return (len);
+}
+
+/*
+lower hex
+*/
+int	ft_puthexlen(int nbr)
+{
+	char	*digits = "0123456789abcdef";
+	int		len = 0;
+
+	if (nbr >= 16)
+		len += ft_puthexlen(nbr / 16);
+	len += ft_putcharlen(digits[nbr % 16]);
+	return (len);
+}
+
+/*
+or BOTH !!
+*/
+int	ft_put_nbr_baselen(int nbr, int base)
+{
+	char	*digits = "0123456789abcdef";
+	int		len = 0;
+
+	if (nbr == -2147483648)
+		return (ft_putstrlen("-2147483648"));
+	if (nbr < 0)
+	{
+		len += ft_putcharlen('-');
+		nbr = -nbr;
+	}
+	if (nbr >= base)
+		len += ft_put_nbr_baselen((nbr / base), base);
+	len += ft_putcharlen(digits[nbr % base]);
+	return (ft_intlen(nbr));
+}
+
+// 
+
+static int	check_format(va_list args, char *str, int i)
+{
+	int	len = 0;
+
+	if (str[i] == 's')
+		len = ft_putstrlen(va_arg(args, char *));
+	if (str[i] == 'd')
+		len = ft_putnbrlen(va_arg(args, int));
+		// len = ft_put_nbr_baselen(va_arg(args, int), 10);
+	if (str[i] == 'x')
+		len = ft_puthexlen(va_arg(args, unsigned int));
+		// len = ft_put_nbr_baselen(va_arg(args, unsigned int), 16);
+	return (len);
+}
+
+int	ft_printf(const char *str, ...)
+{
+	int		i = 0;
+	int		len = 0;
+	va_list	args;
+
+	if (!str)
+		return (0);
+	va_start(args, str);
+	while (str[i])
+	{
+		if (str[i] == '%' && str[i + 1])
+		{
+			len += check_format(args, (char *)str, i + 1);
+			i++;
+		}
+		else
+			len += ft_putcharlen(str[i]);
+		i++;
+	}
+	va_end(args);
+	return (len);
+}
+
+/* -------------------------------------------------------------------------- */
+
+#include <stdio.h>
+
+int	main(void)
+{
+	int		len = 0;
+	int		nbr = 42;
+	char	*str;
+
+	str = "four";
+	// str = NULL;
+	// str = "";
+
+
+	len = ft_printf("%s", str);
+	ft_printf("\tlen is %d\n", len);
+
+	len = ft_printf("%d", nbr);
+	ft_printf("\tlen is %d\n", len);
+	len = ft_printf("%d", -nbr);
+	ft_printf("\tlen is %d\n", len);
+
+	len = ft_printf("%x", nbr);
+	ft_printf("\tlen is %d\n", len);
+	// 
+	printf("\n");
+	// 
+	len = printf("%s", str);
+	printf("\tlen is %d\n", len);
+
+	len =printf("%d", nbr);
+	printf("\tlen is %d\n", len);
+	len =printf("%d", -nbr);
+	printf("\tlen is %d\n", len);
+
+	len = printf("%x", nbr);
+	printf("\tlen is %d\n", len);
+	// 
+	return (0);
 }

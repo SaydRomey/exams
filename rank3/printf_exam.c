@@ -1,19 +1,32 @@
-
 /*
-Printf exam version
+Assignment name  : ft_printf
+Expected files   : ft_printf.c
+Allowed functions: malloc, free, write, va_start, va_arg, va_copy, va_end
+--------------------------------------------------------------------------------
 
-Write a function named ft_printf 
-that will mimic the real printf 
-but it will manage only the following conversions:
+Write a function named `ft_printf` that will mimic the real printf but
+it will manage only the following conversions: s,d and x.
 
-s (string)
-d (decimal) 
-x (lowercase hexademical)
+Your function must be declared as follows:
+
+int ft_printf(const char *, ... );
+
+Before you start we advise you to read the `man 3 printf` and the `man va_arg`.
+To test your program compare your results with the true printf.
+
+Exemples of the function output:
+
+call: ft_printf("%s\n", "toto");
+out: toto$
+
+call: ft_printf("Magic %s is %d", "number", 42);
+out: Magic number is 42%
+
+call: ft_printf("Hexadecimal for %d is %x\n", 42, 42);
+out: Hexadecimal for 42 is 2a$
 */
 
-#include <stdio.h> 
 #include <unistd.h> 
-#include <stdlib.h> 
 #include <stdarg.h> 
 
 int	ft_strlen(char *str)
@@ -30,40 +43,13 @@ int	ft_putcharlen(char c)
 	return (write(1, &c, 1));
 }
 
-int	ft_intlen(int nbr)
-{
-	int	len;
-
-	len = 0;
-	if (nbr <= 0)
-		len = 1;
-	while (nbr != 0)
-	{
-		nbr = nbr / 10;
-		len++;
-	}
-	return (len);
-}
-
-/*
-string
-*/
 int	ft_putstrlen(char *str)
 {
-	int	len = 0;
-
 	if (!str)
-	{
-		len = write(1, "(null)", 6);
-		return (len);
-	}
-	len = write(1, str, ft_strlen(str));
-	return (len);
+		return (write(1, "(null)", 6));
+	return (write(1, str, ft_strlen(str)));
 }
 
-/*
-decimal
-*/
 int	ft_putnbrlen(int nbr)
 {
 	char	*digits = "0123456789";
@@ -79,14 +65,10 @@ int	ft_putnbrlen(int nbr)
 	if (nbr > 9)
 		len += ft_putnbrlen(nbr / 10);
 	len += ft_putcharlen(digits[nbr % 10]);
-	// return (ft_intlen(nbr));
 	return (len);
 }
 
-/*
-lower hex
-*/
-int	ft_puthexlen(int nbr)
+int	ft_puthexlen(unsigned int nbr)
 {
 	char	*digits = "0123456789abcdef";
 	int		len = 0;
@@ -97,30 +79,48 @@ int	ft_puthexlen(int nbr)
 	return (len);
 }
 
-/*
-or BOTH !!
-*/
-int	ft_put_nbr_baselen(int nbr, int base)
+int ft_printf(const char *str, ... )
 {
-	char	*digits = "0123456789abcdef";
+	va_list	args;
 	int		len = 0;
+	int		i = 0;
 
-	if (nbr == -2147483648)
-		return (ft_putstrlen("-2147483648"));
-	if (nbr < 0)
+	if (!str)
+		return (0);
+	va_start(args, str);
+	while (str[i])
 	{
-		len += ft_putcharlen('-');
-		nbr = -nbr;
+		if (str[i] == '%')
+		{
+			if ((str[i + 1]) == 's' || str[i + 1] == 'd' || str[i + 1] == 'x')
+			{
+				if (str[i + 1] == 's')
+					len += ft_putstrlen(va_arg(args, char *));
+				if (str[i + 1] == 'd')
+					len += ft_putnbrlen(va_arg(args, int));
+				if (str[i + 1] == 'x')
+					len += ft_puthexlen(va_arg(args, unsigned int));
+			}
+			i++;
+		}
+		else
+			len += ft_putcharlen(str[i]);
+		i++;
 	}
-	if (nbr >= base)
-		len += ft_put_nbr_baselen((nbr / base), base);
-	len += ft_putcharlen(digits[nbr % base]);
-	return (ft_intlen(nbr));
+	va_end(args);
+	return (len);
 }
 
-// 
+/* alt version, just to make it pretty
 
-static int	check_format(va_list args, char *str, int i)
+int	is_valid_specifier(int c)
+{
+	if (c == 's' || c == 'd' || c == 'x')
+		return (1);
+	return (0);
+}
+
+int	check_format(va_list args, char *str, int i)
 {
 	int	len = 0;
 
@@ -128,10 +128,8 @@ static int	check_format(va_list args, char *str, int i)
 		len = ft_putstrlen(va_arg(args, char *));
 	if (str[i] == 'd')
 		len = ft_putnbrlen(va_arg(args, int));
-		// len = ft_put_nbr_baselen(va_arg(args, int), 10);
 	if (str[i] == 'x')
 		len = ft_puthexlen(va_arg(args, unsigned int));
-		// len = ft_put_nbr_baselen(va_arg(args, unsigned int), 16);
 	return (len);
 }
 
@@ -146,9 +144,10 @@ int	ft_printf(const char *str, ...)
 	va_start(args, str);
 	while (str[i])
 	{
-		if (str[i] == '%' && str[i + 1])
+		if (str[i] == '%')
 		{
-			len += check_format(args, (char *)str, i + 1);
+			if (is_valid_specifier(str[i + 1]))
+				len += check_format(args, (char *)str, i + 1);
 			i++;
 		}
 		else
@@ -158,45 +157,31 @@ int	ft_printf(const char *str, ...)
 	va_end(args);
 	return (len);
 }
+*/
 
 /* -------------------------------------------------------------------------- */
 
-#include <stdio.h>
+// #include <stdio.h>
 
-int	main(void)
-{
-	int		len = 0;
-	int		nbr = 42;
-	char	*str;
+// int	main(void)
+// {
+// 	int	nbr = -2147483648;
+// 	int	len = 0;
 
-	str = "four";
-	// str = NULL;
-	// str = "";
+// 	printf("\n\nprintf\n\n");
+// 	len = printf("deci -> %d\n", nbr);
+// 	printf("len = %d\n", len);
+// 	len = printf("hexa -> %x\n", nbr);
+// 	printf("len = %d\n", len);
 
 
-	len = ft_printf("%s", str);
-	ft_printf("\tlen is %d\n", len);
+// 	ft_printf("\n\nft_printf\n\n");
+// 	len = ft_printf("deci -> %d\n", nbr);
+// 	ft_printf("len = %d\n", len);
+// 	len = ft_printf("hexa -> %x\n", nbr);
+// 	ft_printf("len = %d\n", len);
 
-	len = ft_printf("%d", nbr);
-	ft_printf("\tlen is %d\n", len);
-	len = ft_printf("%d", -nbr);
-	ft_printf("\tlen is %d\n", len);
+// 	printf("\n\n");
 
-	len = ft_printf("%x", nbr);
-	ft_printf("\tlen is %d\n", len);
-	// 
-	printf("\n");
-	// 
-	len = printf("%s", str);
-	printf("\tlen is %d\n", len);
-
-	len =printf("%d", nbr);
-	printf("\tlen is %d\n", len);
-	len =printf("%d", -nbr);
-	printf("\tlen is %d\n", len);
-
-	len = printf("%x", nbr);
-	printf("\tlen is %d\n", len);
-	// 
-	return (0);
-}
+// 	return (0);
+// }

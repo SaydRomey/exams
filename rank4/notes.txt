@@ -1,7 +1,186 @@
 
 Microshell notes
 
+Assignment name  : microshell
+Expected files   : microshell.c
+Allowed functions: malloc, free, write, close, 
+fork, waitpid, signal, kill, exit, chdir, execve, dup, dup2, pipe, strcmp, strncmp
+--------------------------------------------------------------------------------------
 
+Write a program that will behave like executing a shell command
+
+- The command line to execute will be the arguments of this program
+
+- Executable's path will be absolute or relative
+but your program must not build a path (from the PATH variable for example)
+
+- You must implement "|" and ";" like in bash
+- we will never try a "|" immediately followed or preceded by nothing or "|" or ";"
+
+- Your program must implement the built-in command cd
+only with a path as argument (no '-' or without parameters)
+
+- if cd has the wrong number of argument
+your program should print in STDERR
+"error: cd: bad arguments" followed by a '\n'
+
+- if cd failed your program should print in STDERR
+"error: cd: cannot change directory to path_to_change" followed by a '\n'
+with path_to_change replaced by the argument to cd
+
+- a cd command will never be immediately followed or preceded by a "|"
+
+- You don't need to manage any type of wildcards (*, ~ etc...)
+- You don't need to manage environment variables ($BLA ...)
+
+- If a system call, except execve and chdir, returns an error
+your program should immediatly print
+"error: fatal" in STDERR followed by a '\n' and the program should exit
+
+- If execve failed you should print
+"error: cannot execute executable_that_failed" in STDERR followed by a '\n'
+with executable_that_failed replaced with the path of the failed executable
+(It should be the first argument of execve)
+
+- Your program should be able to manage more than hundreds of "|"
+even if we limit the number of "open files" to less than 30.
+
+for example this should work:
+$>./microshell /bin/ls "|" /usr/bin/grep microshell ";" /bin/echo i love my microshell
+microshell
+i love my microshell
+$>
+
+Hints:
+Don't forget to pass the environment variable to execve
+
+Hints:
+Do not leak file descriptors!
+
+//
+
+
+Error Handling Functions
+
+int err(const char *str)
+{
+	write(2, str, strlen(str));
+	return (1);
+}
+Purpose: Writes an error message to the standard error (STDERR, file descriptor 2).
+How it works: It uses the write system call to output the string str to STDERR.
+The length of the string is determined by strlen(str).
+After printing the error message, it returns 1 to indicate an error condition.
+
+
+CD Command Implementation
+
+int cd(char **argv)
+{
+	if (chdir(argv[1]) == -1)
+	{
+		err(ERR_CD);
+		err(argv[1]);
+		err("\n");
+		return (1);
+	}
+	return (0);
+}
+Purpose: Executes the cd (change directory) command.
+How it works: It calls chdir with argv[1] as the target directory.
+If chdir returns -1, it means changing the directory failed,
+and it prints an error message using the err function.
+It returns 0 on success to indicate no error.
+
+
+Command Execution with Optional Piping
+
+int exec_cmd(char **argv, char **envp)
+Purpose: Executes a command, handling optional piping (|) between commands.
+How it works: Iterates over argv looking for a pipe symbol (|).
+If found, it sets up piping using pipe(pipefd) and adjusts file descriptors with dup2.
+It then forks the process:
+	Child process: Executes the command using execve.
+	If it's part of a pipeline,
+	it sets up STDOUT or STDIN redirection as needed.
+
+	Parent process: Waits for the child to finish
+	and captures its exit status with waitpid.
+	It then resets variables for the next command sequence if there's a pipeline.
+
+
+Main Logic for Parsing and Executing Commands
+
+int microshell(int argc, char **argv, char **envp)
+
+Purpose: Parses the command line arguments
+to execute commands separated by ; and handles the built-in cd command.
+How it works: Iterates over argv, using ; to delimit commands.
+For each command:
+	If it's cd, checks for the correct number of arguments
+	and executes it using cd().
+
+	Otherwise, passes the command to exec_cmd for execution,
+	including handling pipelines.
+
+After executing a command or pipeline,
+it continues to the next command after ;.
+
+
+Main Function
+
+int main(int argc, char **argv, char **envp)
+
+Purpose: Entry point of the program.
+Executes the microshell with given arguments.
+How it works: Checks if there are command line arguments (argc > 1).
+If so, it calls microshell to process and execute those commands
+and returns its return value.
+If there are no additional arguments, it simply returns 0.
+
+
+Key Concepts and Techniques Demonstrated
+
+Iterative Parsing: The code iteratively parses the command line arguments,
+handling special symbols (; and |)
+to separate and execute commands accordingly.
+
+Forking and Executing: For external commands,
+it uses fork to create a new process and execve to execute the command in the child process,
+demonstrating basic process creation and execution in Unix-like systems.
+
+Piping: Shows how to set up inter-process communication via pipes for commands separated by |,
+highlighting file descriptor manipulation with dup2.
+
+Error Handling: Through consistent use of the err function
+and careful checking of system call return values,
+it ensures robust error reporting and handling.
+
+..
+
+WIFEXITED(status): This checks if the child process exited normally.
+If this is true, it means the child process terminated as expected
+(e.g., by calling exit() or returning from main()).
+
+WEXITSTATUS(status): This macro extracts the exit status of the child process
+if WIFEXITED(status) returned true.
+This is the value that the child process passed to exit() or return from main().
+This value is then returned by the exec function,
+allowing the caller to know the specific exit code of the child process.
+
+else branch with return -1;: If WIFEXITED(status) is false,
+it means the child process did not exit normally
+(e.g., it was terminated by a signal).
+In this case, returning -1 indicates an error or abnormal termination.
+Might choose to handle different termination conditions separately
+(like checking WIFSIGNALED)
+and return different error codes based on the cause of abnormal termination.
+
+This modification ensures that the exec function returns
+the actual exit status of the child process when it exits normally,
+providing clearer and more useful information to the caller.
+Additionally, it handles the case of abnormal termination distinctly by returning -1,
+making error handling more straightforward.
 
 
 

@@ -57,8 +57,10 @@ Don't forget to pass the environment variable to execve
 Hints:
 Do not leak file descriptors!
 
-//
+/* ************************************************************************** */
+/* ************************************************************************** */
 
+*!! To redo
 
 Error Handling Functions
 
@@ -158,29 +160,42 @@ it ensures robust error reporting and handling.
 
 ..
 
-WIFEXITED(status): This checks if the child process exited normally.
-If this is true, it means the child process terminated as expected
-(e.g., by calling exit() or returning from main()).
+/* ************************************************************************** */
+/* ************************************************************************** */
 
-WEXITSTATUS(status): This macro extracts the exit status of the child process
-if WIFEXITED(status) returned true.
-This is the value that the child process passed to exit() or return from main().
-This value is then returned by the exec function,
-allowing the caller to know the specific exit code of the child process.
+Tester from GRADEME (not including child process testing) ((TODO?))
 
-else branch with return -1;: If WIFEXITED(status) is false,
-it means the child process did not exit normally
-(e.g., it was terminated by a signal).
-In this case, returning -1 indicates an error or abnormal termination.
-Might choose to handle different termination conditions separately
-(like checking WIFSIGNALED)
-and return different error codes based on the cause of abnormal termination.
+ulimit -n 30
 
-This modification ensures that the exec function returns
-the actual exit status of the child process when it exits normally,
-providing clearer and more useful information to the caller.
-Additionally, it handles the case of abnormal termination distinctly by returning -1,
-making error handling more straightforward.
+./a.out /bin/ls
+./a.out /bin/ls microshell.c
+./a.out /bin/ls salut
+./a.out ";"
+./a.out ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";"
+./a.out ";" ";" /bin/echo OK
+./a.out ";" ";" /bin/echo OK ";"
+./a.out ";" ";" /bin/echo OK ";" ";"
+./a.out ";" ";" /bin/echo OK ";" ";" ";" /bin/echo OK
+./a.out /bin/ls "|" /usr/bin/grep a.out
+./a.out /bin/ls "|" /usr/bin/grep microshell "|" /usr/bin/grep micro
+./a.out /bin/ls "|" /usr/bin/grep microshell "|" /usr/bin/grep micro "|" /usr/bin/grep shell "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro
+./a.out /bin/ls "|" /usr/bin/grep microshell "|" /usr/bin/grep micro "|" /usr/bin/grep shell "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell "|" /usr/bin/grep shell
+./a.out /bin/ls ewqew "|" /usr/bin/grep micro "|" /bin/cat -n ";" /bin/echo dernier ";" /bin/echo
+./a.out /bin/ls "|" /usr/bin/grep micro "|" /bin/cat -n ";" /bin/echo dernier ";" /bin/echo ftest ";"
+./a.out /bin/echo ftest ";" /bin/echo ftewerwerwerst ";" /bin/echo werwerwer ";" /bin/echo qweqweqweqew ";" /bin/echo qwewqeqrtregrfyukui ";"
+./a.out /bin/ls ftest ";" /bin/ls ";" /bin/ls werwer ";" /bin/ls microshell.c ";" /bin/ls subject.fr.txt ";"
+./a.out /bin/ls "|" /usr/bin/grep micro ";" /bin/ls "|" /usr/bin/grep micro ";" /bin/ls "|" /usr/bin/grep micro ";" /bin/ls "|" /usr/bin/grep micro ";"
+./a.out /bin/cat reserv_microsh.c "|" /usr/bin/grep a "|" /usr/bin/grep b ";" /bin/cat reserv_microsh.c ";"
+./a.out /bin/cat reserv_microsh.c "|" /usr/bin/grep a "|" /usr/bin/grep w ";" /bin/cat reserv_microsh.c ";"
+./a.out /bin/cat reserv_microsh.c "|" /usr/bin/grep a "|" /usr/bin/grep w ";" /bin/cat reserv_microsh.c
+./a.out /bin/cat reserv_microsh.c ";" /bin/cat reserv_microsh.c "|" /usr/bin/grep a "|" /usr/bin/grep b "|" /usr/bin/grep z ";" /bin/cat reserv_microsh.c
+./a.out ";" /bin/cat reserv_microsh.c ";" /bin/cat reserv_microsh.c "|" /usr/bin/grep a "|" /usr/bin/grep b "|" /usr/bin/grep z ";" /bin/cat reserv_microsh.c
+./a.out blah "|" /bin/echo OK
+./a.out blah "|" /bin/echo OK ";"
+./a.out ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" blah "|" /bin/echo OK ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";" ";"
+./a.out cd ";" /bin/ls
+./a.out /bin/ls "|" /usr/bin/grep microshell "|" /usr/bin/grep micro "|" /usr/bin/grep shell "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|" /usr/bin/grep micro "|"
+
 
 
 

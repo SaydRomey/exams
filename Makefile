@@ -4,12 +4,11 @@
 # all:
 # 	@echo "'make exam' -> launch JCluzet's GRADEME"
 
+# add a read confirm to launch GRADEME..
+
 exam:
 	@bash -c "$$(curl https://grademe.fr)"
 
-
-
-# https://github.com/pasqualerossi/42-School-Exam-Rank-04
-# https://github.com/Glagan/42-exam-rank-04/tree/master/microshell #(using dlinklist)
-
+clean fclean ffclean:
+	@rm -rf 42-EXAM
 

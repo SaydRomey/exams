@@ -6,13 +6,18 @@
 /*   By: cdumais <cdumais@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/05 22:03:12 by cdumais           #+#    #+#             */
-/*   Updated: 2024/02/06 13:39:50 by cdumais          ###   ########.fr       */
+/*   Updated: 2024/02/12 11:47:34 by cdumais          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/* TOCHECK:
 
+(short version)
 // https://github.com/pasqualerossi/42-School-Exam-Rank-04
-// https://github.com/Glagan/42-exam-rank-04/tree/master/microshell // (using dlinklist)
+
+(using doubly linked list)
+// https://github.com/Glagan/42-exam-rank-04/tree/master/microshell
+*/
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -75,10 +80,10 @@ int cd(char **argv)
 
 int exec_cmd(char **argv, char **envp)
 {
-	int pipefd[2];
-	int pid;
+	int	pipefd[2];
+	int	pid;
 	int	status = SUCCESS;
-	int need_pipe = FALSE;
+	int	need_pipe = FALSE;
 
 	// Split commands at pipes and execute sequentially
 	int	i = 0;

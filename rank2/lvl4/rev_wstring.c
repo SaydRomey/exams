@@ -90,6 +90,7 @@ void	rev_wstr(char *str)
     ft_putstr(&str[j]);
     if (i >= 0)
      ft_putchar(' '); //print a space if not at the start
+    }
   }
 }
 

@@ -42,6 +42,7 @@ char	*itoa_min(char *str)
 		str[i] = min_str[i];
 		i++;
 	}
+ str[i] = '/0';
 	return (str);
 }
 

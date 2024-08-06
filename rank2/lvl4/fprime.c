@@ -43,6 +43,11 @@ void	fprime(int nbr)
 	int	check;
 	int	first_flag;
 
+	if (nbr == 1)
+	{
+		printf("1");
+  return ;
+ }
 	check = 2;
 	first_flag = 1;
 	while (check <= nbr)

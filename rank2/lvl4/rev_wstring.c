@@ -38,6 +38,17 @@ void	ft_putchar(char c)
 	write(1, &c, 1);
 }
 
+void ft_putstr(char *str)
+{
+ int i = 0;
+
+ while (str[i])
+ {
+  ft_putchar(str[i]);
+  i++;
+ }
+}
+
 int	ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t')
@@ -55,28 +66,31 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-void	rev_wstring(char *str)
+void	rev_wstr(char *str)
 {
-	int	i;
+	int	i = ft_strlen(str) - 1; //find the last character
 	int	j;
 	int	word_end;
 
-	i = ft_strlen(str); //find the end of the string
 	while (i >= 0)
 	{
-		word_end = i; //find the end of the current word
-		while (word_end >= 0 && !ft_isspace(str[word_end]))
-			word_end--;
-		j = word_end + 1;
-		while (j <= i)
-		{
-			ft_putchar(str[j]); //print the current word
-			j++;
-		}
-		i = word_end; //move to the previous word
-		if (i > 0)
-			ft_putchar(' '); //print a space if not at the start
-	}
+  while (i >= 0 && ft_isspace(str[i])) //skip any trailing spaces
+   {
+    i--;
+   }
+   word_end = i; //find the end of the current word
+   while (i >= 0 && !ft_isspace(str[i]))
+   {
+    i--;
+   }
+   j = i + 1;
+   if (j <= word_end)
+   {
+    str[word_end + 1] = '\0'; //temporarily terminate the string
+    ft_putstr(&str[j]);
+    if (i >= 0)
+     ft_putchar(' '); //print a space if not at the start
+  }
 }
 
 int	main(int argc, char **argv)

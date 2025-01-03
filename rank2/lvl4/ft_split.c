@@ -32,7 +32,7 @@ int	ft_word_count(char *str)
 
 	while (str[i])
 	{
-		if (!ft_isdelim(str[i] && ft_isdelim(str[i + 1] || str[i + 1] == '\0')))
+		if (!ft_isdelim(str[i]) && (ft_isdelim(str[i + 1]) || str[i + 1] == '\0'))
 			word_count++;
 		i++;
 	}
@@ -48,7 +48,7 @@ char	*get_word(char *str)
 	i = 0;
 	while (str[i] && ft_isdelim(str[i]) == 0)
 		i++;
-	word = (char *)malloc(sizeof(char) * i + 1);
+	word = (char *)malloc(sizeof(char) * (i + 1));
 	if (!word)
 		return (NULL);
 	j = 0;
@@ -79,6 +79,16 @@ char	**ft_split(char *str)
 		if (!ft_isdelim(str[i]))
 		{
 			split[j] = get_word(str + i);
+   if (!split[j])
+   {
+    while (j >= 0)
+    {
+     free(split[j]);
+     j--;
+    }
+    free(split);
+    return (NULL);
+   }
 			j++;
 			while (str[i] && !ft_isdelim(str[i]))
 				i++;
@@ -113,6 +123,8 @@ int	main(void)
 	char	**split = ft_split(tosplit);
 	int		i = 0;
 
+ if (!split)
+  return (0);
 	while (split[i])
 	{
 		printf("string %d -> %s\n", i, split[i]);

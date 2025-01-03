@@ -108,7 +108,7 @@ void	display_subject(const char *folder)
 	{
 		printf("%s", buffer);
 	}
-	printf("\n-------------------------\n");
+	printf("-------------------------\n");
 	fclose(file);
 }
 

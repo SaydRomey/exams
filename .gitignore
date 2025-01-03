@@ -1,0 +1,26 @@
+
+# Compiled Binaries and Object Files
+*.o
+*.out
+question_randomizer
+
+# Generated Files
+42-EXAM
+
+# Logs and Temporary Files
+*.log
+*.tmp
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+
+# Build Artifacts
+rank5/module00
+rank5/module01
+rank5/module02

@@ -48,8 +48,8 @@ Finally we consider that get_next_line() has an undefined behaviour
 when reading from a binary file.
 */
 
- #include <unistd.h> 
- #include <stdlib.h> 
+#include <unistd.h> 
+#include <stdlib.h> 
 
 /*
 malloc a new string with 2 more spaces (the char 'c' and a '\0')

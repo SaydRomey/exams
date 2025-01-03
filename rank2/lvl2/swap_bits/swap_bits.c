@@ -9,6 +9,13 @@ unsigned char swap_bits(unsigned char octet)
 	return ((low * 16) + high); //or << 4 (shift left by 4 bits) then add high 4 bits
 }
 
+/*
+unsigned char swap_bits(unsigned char octet)
+{
+	return ((octet >> 4) | (octet << 4));
+}
+*/
+
 /* ************************************************************************** */
 
 #include <unistd.h>

@@ -18,14 +18,14 @@ char    **ft_split(char *str);
 
 #include <stdlib.h>
 
-int	ft_isdelim(char c)
+static int	ft_isdelim(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n')
 		return (1);
 	return (0);
 }
 
-int	ft_word_count(char *str)
+static int	ft_word_count(char *str)
 {
 	int	i = 0;
 	int	word_count = 0;
@@ -39,7 +39,7 @@ int	ft_word_count(char *str)
 	return (word_count);
 }
 
-char	*get_word(char *str)
+static char	*get_word(char *str)
 {
 	int		i;
 	int		j;

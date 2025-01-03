@@ -9,7 +9,7 @@ REPO_LINK	:= https://github.com/SaydRomey/exams
 # 📜 Handle invalid targets
 .DEFAULT:
 	$(info make: *** No rule to make target '$(MAKECMDGOALS)'.  Stop.)
-	@$(MAKE) help --no-print-directory
+	@$(MAKE) $(NPD) help --no-print-directory
 
 # 🎨 Colors and Style with ANSI
 ESC			:= \033
@@ -41,6 +41,7 @@ COMPILE	:= gcc $(C_FLAGS)
 # 🛠️ Utility Commands
 REMOVE	:= rm -rf
 MKDIR	:= mkdir -p
+NPD		:= --no-print-directory
 
 # 📂 Directories
 RANK2	:= rank2
@@ -73,10 +74,10 @@ all: ## Main menu for project actions
 	@echo "3) Show all 'make' options"
 	@read -p "Enter your choice: " choice; \
 	case $$choice in \
-		0) $(MAKE) exam ;; \
-		1) $(MAKE) rand_question ;; \
-		2) $(MAKE) repo ;; \
-		3) $(MAKE) help ;; \
+		0) $(MAKE) $(NPD) exam ;; \
+		1) $(MAKE) $(NPD) rand_question ;; \
+		2) $(MAKE) $(NPD) repo ;; \
+		3) $(MAKE) $(NPD) help ;; \
 		*) $(call ERROR,Invalid choice:,$$choice) ;; \
 	esac
 
@@ -123,7 +124,7 @@ subjects: ## Show subject for a specific rank
 		4) [ -f $(MICROSHELL_SUBJECT) ] && cat $(MICROSHELL_SUBJECT) || $(call ERROR,Subject not found:, $(MICROSHELL_SUBJECT)) ;; \
 		5) \
 			echo "$(BOLD)Switching to rank5...$(RESET)"; \
-			$(MAKE) -C $(RANK5) subject ;; \
+			$(MAKE) $(NPD) -C $(RANK5) subject ;; \
 		*) $(call ERROR,Invalid rank choice:,$$rank) ;; \
 	esac
 
@@ -164,7 +165,7 @@ fclean: clean ## Remove executables and temporary files
 
 ffclean: fclean ## Super clean (grademe and rank 5)
 	@$(call INFO,ffclean,Performing an ultra-clean...)
-	@$(MAKE) fclean -C $(RANK5)
+	@$(MAKE) $(NPD) fclean -C $(RANK5)
 
 # ==============================
 ##@ 🛠️  Utility

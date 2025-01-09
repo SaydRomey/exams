@@ -1,0 +1,137 @@
+
+Coplien requirements and info:
+
+//
+
+destructor and pure function must be virtual
+
+the 'clone()' might look like this in abstract class:
+		virtual ASpell*	clone(void) const = 0;
+and like this in derived classes:
+		virtual Fireball*	clone(void) const;
+		virtual Fwoosh*	clone(void) const;
+		virtual Polymorph*	clone(void) const;
+
+the implementation of the 'clone()' in derived classes:
+
+Fireball*	Fireball::clone(void) const
+{
+	return (new Fireball(*this));
+}
+
+//
+
+if another abstract class is used in an abstract class hpp,
+include header, and forward declare the class:
+
+ex.,[in ATarget.hpp]:
+
+[...]
+# include "ASpell.hpp"
+
+class ASpell; // forward declaration
+
+class ATarget
+{
+	[...]
+
+	public:
+    	void	getHitBySpell(const ASpell& spell) const;
+};
+
+//
+
+an abstract class does not need
+default constructor, copy constructor and assignment overload
+if not needed, to comply with coplien form requirements...
+
+//
+
+for unavailable constructors, no need for variable names in params:
+
+[...]
+	private:
+		Warlock(const Warlock& other);
+		Warlock& operator=(const Warlock& other);
+[...]
+
+can be
+
+[...]
+	private:
+		Warlock(const Warlock&);
+		Warlock& operator=(const Warlock&);
+[...]
+
+//
+
+
+Info on classes containing a map:
+
+ex with std::map<std::string, ASpell*> _spells;
+
+Destructors:
+
+use iterator and delete:
+
+SpellBook::~SpellBook(void)
+{
+	std::map<std::string, ASpell*>::iterator	it = _spells.begin();
+	while (it != _spells.end())
+	{
+		delete it->second;
+		++it;
+	}
+	// _spells.clear(); // not neccessary, but for clarity of intent..
+}
+
+Adding a spell using clone():
+
+void	SpellBook::learnSpell(ASpell* spell)
+{
+	if (spell)
+		_spells[spell->getName()] = spell->clone();
+}
+
+Removing a known spell if existing in map:
+
+Use delete on ASpell*,
+and map.erase(iterator) on it:
+
+void	SpellBook::forgetSpell(const std::string& spellName)
+{
+	std::map<std::string, ASpell*>::iterator	it = _spells.find(spellName);
+	if (it != _spells.end())
+	{
+		delete it->second;
+		_spells.erase(it);
+	}
+}
+
+Create a spell and return it:
+
+
+use iterator to find spell,
+use clone or NULL to return a new one:
+
+ASpell*	SpellBook::createSpell(const std::string& spellName) const
+{
+	std::map<std::string, ASpell*>::const_iterator	it = _spells.find(spellName);
+	if (it != _spells.end())
+		return (it->second->clone());
+	return (NULL);
+}
+
+//
+
+Using spell book to launch spell:
+
+declare an ASpell* and use 'createSpell()':
+
+void	Warlock::launchSpell(const std::string& spellName, const ATarget& target)
+{
+	ASpell*	spell = _spellBook.createSpell(spellName);
+	if (spell)
+		spell->launch(target);
+}
+

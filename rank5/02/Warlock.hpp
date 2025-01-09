@@ -5,7 +5,6 @@
 // # include <iostream>
 // # include <string>
 # include "SpellBook.hpp"
-# include "TargetGenerator.hpp"
 # include "ASpell.hpp"
 # include "ATarget.hpp"
 
@@ -15,7 +14,6 @@ class Warlock
 		std::string		_name;
 		std::string		_title;
 		SpellBook		_spellBook;
-		TargetGenerator	_targetGenerator;
 
 		Warlock(void);
 		Warlock(const Warlock& other);

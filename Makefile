@@ -9,7 +9,7 @@ REPO_LINK	:= https://github.com/SaydRomey/exams
 # 📜 Handle invalid targets
 .DEFAULT:
 	$(info make: *** No rule to make target '$(MAKECMDGOALS)'.  Stop.)
-	@$(MAKE) $(NPD) help --no-print-directory
+	@$(MAKE) help $(NPD)
 
 # 🎨 Colors and Style with ANSI
 ESC			:= \033
@@ -35,8 +35,8 @@ WARNING		= echo "[$(BOLD)$(PURPLE)$(1)$(RESET)]\t$(YELLOW)$(2)$(RESET)"
 ERROR		= echo "❌ Error: $(1) $(RED)$(2)$(RESET)"
 
 # 🛠️ Build Configuration
+COMPILE	:= gcc
 C_FLAGS	:= -Wall -Wextra -Werror
-COMPILE	:= gcc $(C_FLAGS)
 
 # 🛠️ Utility Commands
 REMOVE	:= rm -rf
@@ -62,6 +62,7 @@ MICROSHELL_SUBJECT		:= $(RANK4)/_subject.txt
 # 📖 Notes
 NOTES_R2	:= $(RANK2)/notes.txt
 NOTES_R4	:= $(RANK4)/notes.txt
+NOTES_R5	:= $(RANK5)/notes.txt
 
 # ==============================
 ##@ 🚀 General
@@ -93,7 +94,7 @@ exam: ## Launch JCluzet's GRADEME
 # 🎲 Randomized rank2 question
 rand_question: ## Run question randomizer (Rank 2)
 	@$(call INFO,question_randomizer,Compiling...)
-	@$(COMPILE) $(QUESTION_RANDOMIZER_SRC) -o $(QUESTION_RANDOMIZER_BIN)
+	@$(COMPILE) $(C_FLAGS) $(QUESTION_RANDOMIZER_SRC) -o $(QUESTION_RANDOMIZER_BIN)
 	@$(call SUCCESS,question_randomizer,Compilation successful!)
 	@$(call INFO,question_randomizer,Executing randomizer...)
 	@./$(QUESTION_RANDOMIZER_BIN)
@@ -130,11 +131,12 @@ subjects: ## Show subject for a specific rank
 
 notes: ## View notes for a specific rank
 	@echo "$(BOLD)Choose a rank to view notes:$(RESET)"
-	@echo "2) rank2 | 4) rank4"
+	@echo "2) rank2 | 4) rank4 | 5) rank5"
 	@read -p "Enter your choice: " rank; \
 	case $$rank in \
 		2) [ -f $(NOTES_R2) ] && cat $(NOTES_R2) | more || $(call ERROR,Notes not found:, $(NOTES_R2)) ;; \
 		4) [ -f $(NOTES_R4) ] && cat $(NOTES_R4) | more || $(call ERROR,Notes not found:, $(NOTES_R4)) ;; \
+		5) [ -f $(NOTES_R5) ] && cat $(NOTES_R5) | more || $(call ERROR,Notes not found:, $(NOTES_R5)) ;; \
 		*) $(call ERROR,Invalid rank choice:,$$rank) ;; \
 	esac
 
@@ -174,7 +176,7 @@ help: ## Display available targets
 	@echo "\nAvailable targets:"
 	@awk 'BEGIN {FS = ":.*##";} \
 		/^[a-zA-Z_0-9-]+:.*?##/ { \
-			printf "  $(CYAN)%-15s$(RESET) %s\n", $$1, $$2 \
+			printf "   $(CYAN)%-15s$(RESET) %s\n", $$1, $$2 \
 		} \
 		/^##@/ { \
 			printf "\n$(BOLD)%s$(RESET)\n", substr($$0, 5) \
@@ -187,6 +189,7 @@ help: ## Display available targets
 
 # **************************************************************************** #
 # 📦 Project Root (exams)
+# ├── 42-EXAM/ (temporary folder when launching exam simulator)
 # ├── rank2/
 # │   ├── lvl1/
 # │   │   ├── first_word.c
@@ -220,5 +223,6 @@ help: ## Display available targets
 # │   ├── 01/
 # │   ├── 02/
 # │   ├── Makefile (handles the rank5 folder and modules)
+# │   ├── notes.txt
 # ├── .gitignore
 # ├── Makefile (this Makefile)

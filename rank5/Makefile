@@ -212,7 +212,7 @@ help: ## Display Available 'make' Targets
 	@echo "\nAvailable targets:"
 	@awk 'BEGIN {FS = ":.*##";} \
 		/^[a-zA-Z_0-9-]+:.*?##/ { \
-			printf "  $(CYAN)%-15s$(RESET) %s\n", $$1, $$2 \
+			printf "   $(CYAN)%-15s$(RESET) %s\n", $$1, $$2 \
 		} \
 		/^##@/ { \
 			printf "\n$(GRAYTALIC)%s$(RESET)\n", substr($$0, 5) \

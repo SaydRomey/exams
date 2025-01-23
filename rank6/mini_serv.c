@@ -166,7 +166,10 @@ int main(int argc, char **argv)
 		while (fd <= max_fd)
 		{
 			if (!FD_ISSET(fd, &read_set))
-				continue; // no new message or clients, go to next fd *(fd++?)
+			{
+				fd++;
+				continue; // no new message or clients, go to next fd
+			}
 			if (fd == sockfd) // new client detected
 			{
 				// get this part from main
